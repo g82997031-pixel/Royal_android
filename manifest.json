@@ -1,0 +1,11 @@
+JSON
+{
+  "name": "ROYAL",
+  "short_name": "ROYAL",
+  "description": "ROYAL Virtual Games",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#100d08",
+  "theme_color": "#FFD700"
+}
