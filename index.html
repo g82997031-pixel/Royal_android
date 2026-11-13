@@ -1,0 +1,166 @@
+HTML
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROYAL KIDS PUZZLE</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,#fff0b3,#ffb6d9);
+  text-align: center;
+  color: #563078;
+}
+header {
+  background: #663399;
+  color: gold;
+  padding: 22px 10px;
+  font-size: 25px;
+  font-weight: bold;
+}
+h2 { color: #663399; }
+.container { padding: 15px; }
+.score {
+  font-size: 20px;
+  margin: 15px;
+  font-weight: bold;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 15px;
+  max-width: 420px;
+  margin: 20px auto;
+}
+.card {
+  background: white;
+  border-radius: 18px;
+  padding: 20px 8px;
+  font-size: 48px;
+  border: 3px solid gold;
+  cursor: pointer;
+  box-shadow: 0 4px 8px #0002;
+}
+.card:active { transform: scale(.95); }
+button {
+  background: #663399;
+  color: white;
+  border: none;
+  padding: 14px 25px;
+  border-radius: 25px;
+  font-size: 18px;
+  margin: 10px;
+}
+#message {
+  font-size: 21px;
+  font-weight: bold;
+  min-height: 30px;
+}
+footer {
+  padding: 20px;
+  color: #663399;
+}
+</style>
+</head>
+<body>
+
+<header>👑 ROYAL KIDS PUZZLE 👑</header>
+
+<div class="container">
+<h2>Welcome Kids! 🌈</h2>
+<p>Find the matching pictures!</p>
+
+<div class="score">
+⭐ Stars: <span id="score">0</span>
+</div>
+
+<div class="grid" id="game"></div>
+
+<div id="message">Let's Play! 🎉</div>
+
+<button onclick="startGame()">New Game 🔄</button>
+</div>
+
+<footer>💖 Learn • Play • Enjoy 💖</footer>
+
+<script>
+const pictures = ["🐱","🐶","🐘","🦁"];
+let cards = [];
+let first = null;
+let lock = false;
+let score = 0;
+let matched = 0;
+
+function startGame() {
+  cards = [...pictures, ...pictures]
+    .sort(() => Math.random() - 0.5);
+
+  first = null;
+  lock = false;
+  score = 0;
+  matched = 0;
+
+  document.getElementById("score").textContent = score;
+  document.getElementById("message").textContent = "Find matching animals! 🐾";
+
+  const game = document.getElementById("game");
+  game.innerHTML = "";
+
+  cards.forEach((animal, index) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.textContent = "❓";
+    card.dataset.animal = animal;
+    card.dataset.index = index;
+    card.onclick = () => flipCard(card);
+    game.appendChild(card);
+  });
+}
+
+function flipCard(card) {
+  if (lock || card.classList.contains("matched") ||
+      card === first || card.textContent !== "❓") return;
+
+  card.textContent = card.dataset.animal;
+
+  if (!first) {
+    first = card;
+    return;
+  }
+
+  if (first.dataset.animal === card.dataset.animal) {
+    first.classList.add("matched");
+    card.classList.add("matched");
+    first.style.background = "#b8ffcf";
+    card.style.background = "#b8ffcf";
+    first = null;
+    score += 10;
+    matched += 2;
+
+    document.getElementById("score").textContent = score;
+    document.getElementById("message").textContent = "Great Job! 🌟";
+
+    if (matched === cards.length) {
+      document.getElementById("message").textContent =
+        "🏆 Congratulations! You Won!";
+    }
+  } else {
+    lock = true;
+    const previous = first;
+    first = null;
+
+    setTimeout(() => {
+      previous.textContent = "❓";
+      card.textContent = "❓";
+      lock = false;
+    }, 900);
+  }
+}
+
+startGame();
+</script>
+</body>
+</html>
